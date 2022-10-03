@@ -16,15 +16,7 @@ const vehicleSchema =new mongoose.Schema({
     vehicleRegistrationNumber: {
         type: String
     },
-    frontView:{
-        type:String
-    },
-    sideView:{
-        type:String
-    },
-    backView:{
-        type:String
-    }
+    images:[]
 })
 
 module.exports=mongoose.model('Vehicle', vehicleSchema)
