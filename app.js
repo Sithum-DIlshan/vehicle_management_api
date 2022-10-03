@@ -1,7 +1,7 @@
 const express = require('express')
 const mongoose = require("mongoose");
 const app = express()
-const port = 8080
+const port = 8000
 app.use(express.json())
 const multer  = require('multer')
 const upload = multer({ dest: 'uploads/' })
