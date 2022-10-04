@@ -6,24 +6,52 @@ const User = require('../models/user.model')
 const { json } = require("express");
 const multer = require('multer')
 
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'public/uploads/' })
+
+app.use(express.static('public'));
 
 app.use(express, json())
 
 const images = []
 
-// router.get('/', async (req, res) => {
+router.get('/vehicles', async (req, res) => {
+    try {
+        // req.query.emailId
+        const users = await User.findOne({'emailId':'sithum@gmail.com'})
+        res.json(users.vehicles)
+    } catch (err) {
+        res.send('Error '+err)
+    }
+})
+
+// router.delete('/', async(req, res)=>{
 //     try {
-//         const users = await User.findOne({'emailId':req.query.emailId})
-//         res.json(users)
+//         // const users = await User.remove();
+//         // res.json(users.vehicles)
+//         console.log("deleted")
 //     } catch (err) {
 //         res.send('Error '+err)
 //     }
 // })
 
+router.delete('/vehicles/', async(req, res)=>{
+    try {
+        console.log(req.body)
+        const user = await User.updateMany(
+            {},
+            {$pull:{vehicles:{vehicleChassiNumber:req.body.chassiNo}}}
+        )
+        
+        //  res.json(users.vehicles)
+    } catch (err) {
+        res.send('Error '+err)
+    }
+})
+
 router.get('/', async (req, res) => {
     try {
         const users = await User.find()
+
         res.json(users)
     } catch (err) {
         res.send('Error ' + err)
@@ -31,23 +59,24 @@ router.get('/', async (req, res) => {
 })
 
 
-// router.post('/',  async (req, res) => {
-//     try {
-//         // const user = await User.find()
-//         const user = new User({
-//             emailId: req.body.email,
-//             fullName: req.body.fullName,
-//             mobile: req.body.mobile,
-//             password: req.body.password,
-//         })
-//         const response = await user.save();
-//         res.send(response);
-//     } catch (err) {
+router.post('/',  async (req, res) => {
+    try {
+        // const user = await User.find()
+        const user = new User({
+            emailId: req.body.email,
+            fullName: req.body.fullName,
+            mobile: req.body.mobile,
+            password: req.body.password,
+        })
+        const response = await user.save();
+        res.send(response);
+    } catch (err) {
 
-//     }
-// })
+    }
+})
 
-router.post('/', upload.array('photos', 4), async (req, res, next) => {
+router.post('/vehicle', upload.array('photos', 4), async (req, res, next) => {
+
     try {
         console.log(req.files);
         console.log(req.body);

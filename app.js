@@ -1,11 +1,14 @@
 const express = require('express')
 const mongoose = require("mongoose");
 const app = express()
-const port = 8000
+const port = 8080
 app.use(express.json())
 const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'public/uploads/' })
 const user = require('./routes/user')
+app.use(express.static('public'));
+
+
 
 app.use('/user', user)
 
