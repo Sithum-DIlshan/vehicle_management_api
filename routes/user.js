@@ -12,13 +12,23 @@ app.use(express.static('public'));
 
 app.use(express, json())
 
-const images = []
+let images = []
 
 router.get('/vehicles', async (req, res) => {
     try {
         // req.query.emailId
-        const users = await User.findOne({'emailId':'sithum@gmail.com'})
+        const users = await User.findOne({'emailId':req.query.emailId})
         res.json(users.vehicles)
+    } catch (err) {
+        res.send('Error '+err)
+    }
+})
+
+router.get('/', async (req, res) => {
+    try {
+        // req.query.emailId
+        const users = await User.findOne({'emailId':req.query.emailId})
+        res.json(users)
     } catch (err) {
         res.send('Error '+err)
     }
@@ -35,6 +45,7 @@ router.get('/vehicles', async (req, res) => {
 // })
 
 router.delete('/vehicles/', async(req, res)=>{
+
     try {
         console.log(req.body)
         const user = await User.updateMany(
@@ -48,7 +59,7 @@ router.delete('/vehicles/', async(req, res)=>{
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
     try {
         const users = await User.find()
 
@@ -75,7 +86,7 @@ router.post('/',  async (req, res) => {
     }
 })
 
-router.post('/vehicle', upload.array('photos', 4), async (req, res, next) => {
+router.post('/vehicles', upload.array('photos', 4), async (req, res, next) => {
 
     try {
         console.log(req.files);
@@ -88,7 +99,7 @@ router.post('/vehicle', upload.array('photos', 4), async (req, res, next) => {
 
         // const user = await User.find()
         const users = await User.findOneAndUpdate(
-            { 'emailId': "sithum@gmail.com" },
+            { 'emailId': req.query.emailId },
             {
                 $push: {
                     vehicles: {
@@ -103,6 +114,7 @@ router.post('/vehicle', upload.array('photos', 4), async (req, res, next) => {
             }
 
         )
+        images = [];
 
         // console.log(req.files);
 
