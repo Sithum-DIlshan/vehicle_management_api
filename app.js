@@ -8,19 +8,24 @@ const upload = multer({ dest: 'public/uploads/' })
 const user = require('./routes/user')
 app.use(express.static('public'));
 
+const username = "sithum";
+const password = "sithum24";
+const cluster = "@cluster0.b6zwdil";
+const dbname = "vehicleManager";
+
+mongoose.connect(
+  'mongodb+srv://sithum:sithum24@cluster0.b6zwdil.mongodb.net/?retryWrites=true&w=majority');
 
 
 app.use('/user', user)
-
-
-
-const url = 'mongodb://localhost/vehicle_manager'
-mongoose.connect(url, {useNewUrlParser: true})
+// mongoose.connect(url, {useNewUrlParser: true})
 const con = mongoose.connection
 
-con.on('open', ()=>{
-  console.log('mongodb connected')
-})
+con.on('error', console.error.bind(console, "connection error: "));
+con.once("open", function () {
+  console.log("Connected successfully");
+});
+
 
 app.post('/', upload.single('avatar'), (req, res, next) => {
   console.log(req.file.path, req.body.name)
